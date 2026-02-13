@@ -1,36 +1,56 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const heartsContainer = document.getElementById('hearts-container');
+    const envelopeWrapper = document.getElementById('envelope-wrapper');
+    const seal = document.getElementById('seal');
 
-// Falling Rainbow Hearts
+    // --- Rainbow Hearts Animation ---
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('falling-heart');
+        heart.innerHTML = '❤';
 
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
+        // Randomize position, size, and animation duration
+        const left = Math.random() * 100; // 0 to 100vw
+        const size = Math.random() * 15 + 10; // 10px to 25px
+        const duration = Math.random() * 3 + 3; // 3s to 6s
+        const animDelay = Math.random() * 2; // Start delays
 
-  // Random position
-  heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.left = `${left}vw`;
+        heart.style.fontSize = `${size}px`;
+        heart.style.animationDuration = `${duration}s`;
+        heart.style.animationDelay = `${animDelay}s`;
 
-  // Random size
-  const size = Math.random() * 30 + 10; // 10px to 40px
-  heart.style.width = size + "px";
-  heart.style.height = size + "px";
-  heart.style.setProperty("--size", size + "px");
+        // Rainbow Color Generation using HSL
+        // Hue: 0-360, Saturation: 80-100%, Lightness: 50-70% for vibrant colors
+        const hue = Math.floor(Math.random() * 360);
+        const sat = Math.floor(Math.random() * 20) + 80;
+        const light = Math.floor(Math.random() * 20) + 50;
 
-  // Random color
-  const colors = ["red","orange","yellow","green","blue","indigo","violet"];
-  heart.style.background = colors[Math.floor(Math.random() * colors.length)];
-  heart.style.setProperty("--color", heart.style.background);
+        heart.style.color = `hsl(${hue}, ${sat}%, ${light}%)`;
 
-  // Color the before & after for the heart shape
-  heart.style.setProperty("--before-color", heart.style.background);
-  heart.style.setProperty("--after-color", heart.style.background);
+        // Random rotation for natural feel
+        const rotation = Math.random() * 360;
+        heart.style.transform = `rotate(${rotation}deg)`;
 
-  // Random animation speed
-  const speed = Math.random() * 3 + 2; // 2s to 5s
-  heart.style.animationDuration = speed + "s";
+        heartsContainer.appendChild(heart);
 
-  document.body.appendChild(heart);
+        // Remove heart after animation finishes to keep DOM clean
+        setTimeout(() => {
+            heart.remove();
+        }, (duration + animDelay) * 1000);
+    }
 
-  setTimeout(() => heart.remove(), speed * 1000);
-}
+    // Create a heart every 100ms for a dense "rain" effect
+    setInterval(createHeart, 100);
 
-// Generate hearts every 300ms
-setInterval(createHeart, 300);
+    // --- Envelope Interaction ---
+    function openEnvelope() {
+        envelopeWrapper.classList.add('open');
+    }
+
+    envelopeWrapper.addEventListener('click', openEnvelope);
+    seal.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent double triggering if bubbling
+        openEnvelope();
+    });
+});
