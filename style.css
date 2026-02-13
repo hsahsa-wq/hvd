@@ -1,10 +1,8 @@
 :root {
     --bg-gradient: radial-gradient(circle at center, #fff0f5 0%, #ffe4e1 100%);
-    /* MistyRose to MistyRose dark */
-    --envelope-color: #d4af37;
-    /* Metallic Gold/Bronze base */
-    --envelope-dark: #b8962e;
-    --envelope-flap: #e6c34f;
+    --envelope-color: #ff1493;
+    --envelope-dark: #c71585;
+    --envelope-flap: #ff69b4;
     --letter-bg: #fffbf0;
     --text-color: #4a0e1e;
     --shadow-color: rgba(0, 0, 0, 0.2);
@@ -28,7 +26,6 @@ body {
     perspective: 1000px;
 }
 
-/* --- Rainbow Hearts Background --- */
 #hearts-container {
     position: absolute;
     top: 0;
@@ -54,7 +51,6 @@ body {
     }
 }
 
-/* --- Scene & Wrapper --- */
 .scene {
     position: relative;
     width: 300px;
@@ -77,7 +73,6 @@ body {
     transform: scale(1.02);
 }
 
-/* --- The 3D Envelope --- */
 .envelope {
     position: relative;
     width: 100%;
@@ -85,11 +80,9 @@ body {
     background: var(--envelope-color);
     box-shadow: 0 20px 40px var(--shadow-color);
     border-radius: 5px;
-    overflow: hidden;
-    z-index: 10;
+    z-index: 5;
 }
 
-/* Pocket (The bottom part that holds the letter) */
 .pocket {
     position: absolute;
     bottom: 0;
@@ -100,23 +93,27 @@ body {
     border-right: 150px solid var(--envelope-color);
     border-top: 100px solid transparent;
     border-bottom: 100px solid var(--envelope-dark);
-    /* Darker for depth */
-    z-index: 3;
+    z-index: 10;
     border-radius: 0 0 5px 5px;
 }
 
-/* Flap (The top part that opens) */
 .flap-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100px;
-    /* Half height */
-    z-index: 5;
+    z-index: 11;
     transform-origin: top;
     transition: transform 0.6s ease-in-out 0.2s, z-index 0.2s 0.2s;
-    /* Delay z-index swap */
+}
+
+.envelope-wrapper:not(.open) .flap-container {
+    transition: transform 0.6s ease-in-out 0.4s, z-index 0.2s 0.4s;
+}
+
+.envelope-wrapper.open .flap-container {
+    transition: transform 0.6s ease-in-out 0s, z-index 0.2s 0.2s;
 }
 
 .flap {
@@ -128,61 +125,65 @@ body {
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
 }
 
-/* --- The Letter --- */
 .letter {
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 0);
+    top: auto;
+
     width: 90%;
     height: 90%;
     background: var(--letter-bg);
-    border-radius: 2px;
-    z-index: 2;
-    /* Inside pocket initially */
-    transition: transform 0.8s ease-in-out 0.6s, z-index 0s 0.6s;
-    /* Slide out after flap opens */
+    border-radius: 5px;
+    z-index: 4;
+
+    transition: width 0.6s ease-in-out, height 0.6s ease-in-out, top 0.6s ease-in-out, transform 0.6s ease-in-out, z-index 0.1s;
+
     padding: 20px;
     box-sizing: border-box;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Center text vertically */
     align-items: center;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.letter::-webkit-scrollbar {
+    display: none;
 }
 
 .letter-content {
     text-align: center;
     opacity: 0;
-    /* Hidden initially, fade in */
-    transition: opacity 1s ease-in-out 1s;
+    transition: opacity 0.5s ease-in-out;
+    width: 100%;
 }
 
 .letter h1 {
     font-family: 'Great Vibes', cursive;
-    margin: 0 0 10px;
+    margin: 10px 0;
     color: #800020;
-    /* Burgundy */
     font-size: 2rem;
 }
 
 .letter p {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.1rem;
-    line-height: 1.4;
+    line-height: 1.5;
     color: var(--text-color);
     margin: 0;
 }
 
 .signature {
     font-family: 'Great Vibes', cursive;
-    font-size: 1.5rem;
+    margin-top: 15px;
+    font-size: 1.6rem;
     display: block;
-    margin-top: 10px;
 }
 
-/* --- Wax Seal --- */
 .wax-seal {
     position: absolute;
     top: 50%;
@@ -199,7 +200,7 @@ body {
     align-items: center;
     border: 2px solid #b30000;
     cursor: pointer;
-    transition: transform 0.3s, opacity 0.3s 0.2s;
+    transition: transform 0.3s, opacity 0.3s;
 }
 
 .wax-seal:hover {
@@ -212,10 +213,11 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Click Instruction --- */
 .instruction-text {
     position: absolute;
-    bottom: -50px;
+    bottom: -60px;
+    width: 100%;
+    text-align: center;
     color: rgba(74, 14, 30, 0.6);
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.2rem;
@@ -224,6 +226,7 @@ body {
     opacity: 0;
     animation: fadeIn 2s ease-in-out forwards;
     animation-delay: 1s;
+    transition: opacity 0.5s;
 }
 
 @keyframes fadeIn {
@@ -233,10 +236,10 @@ body {
 }
 
 /* --- OPEN STATES --- */
+
 .envelope-wrapper.open .flap-container {
     transform: rotateX(180deg);
     z-index: 1;
-    /* Move behind letter */
 }
 
 .envelope-wrapper.open .wax-seal {
@@ -246,16 +249,25 @@ body {
 }
 
 .envelope-wrapper.open .letter {
-    transform: translateX(-50%) translateY(-100px);
-    /* Move letter up */
-    z-index: 6;
-    /* Move in front of everything */
-    height: 350px;
-    /* Expand letter slightly */
+    z-index: 20;
+    width: 350px;
+    height: 400px;
+
+    /* Strict Centering */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    bottom: auto;
+
+    background: #fffbf0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+    transition: width 0.6s ease-in-out 0.4s, height 0.6s ease-in-out 0.4s, top 0.6s ease-in-out 0.4s, transform 0.6s ease-in-out 0.4s;
 }
 
 .envelope-wrapper.open .letter-content {
     opacity: 1;
+    transition-delay: 1s;
 }
 
 .envelope-wrapper.open .instruction-text {
