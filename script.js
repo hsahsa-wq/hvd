@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function createHeart() {
         const heart = document.createElement('div');
         heart.classList.add('falling-heart');
-        heart.innerHTML = '❤';
+
+        const emojis = ['❤', '🌸', '🌹', '🌺', '🌷', '🌻', '🌼', '💐'];
+        heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
 
         // Randomize position, size, and animation duration
         const left = Math.random() * 100; // 0 to 100vw
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Envelope Interaction ---
     function openEnvelope() {
-        envelopeWrapper.classList.add('open');
+        envelopeWrapper.classList.toggle('open');
     }
 
     envelopeWrapper.addEventListener('click', openEnvelope);
